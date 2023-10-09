@@ -57,13 +57,14 @@ userRouter.post("/login", (req, res) => {
     //matching the password
     crypt.compare(user.pwd, userFound.pwd).then((pwdMatched) => {
       if (pwdMatched) {
-        const jwtToken = jwt.sign({ _id: userFound._id }, JWT_SECRET);
+        const jwtToken = jwt.sign({ _id: userFound._id }, JWT_SECRET, {algorithm:"HS256"});
         return res
           .status(200)
           .json({
-            result: { token: jwtToken },
+            token: jwtToken,
             Success: "User Successfully Logged In",
-            user: user.fname,
+            id: userFound._id,
+            usr:userFound
           });
       }
       return res.status(500).json({ Error: "Incorrect password" });
